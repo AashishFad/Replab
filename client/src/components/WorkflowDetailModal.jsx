@@ -73,22 +73,27 @@ export const WorkflowDetailModal = ({
     setIsPolling(false);
   }, []);
 
-  // Sync internal state when initialWorkflow changes
+  // Reset and synchronize internal state whenever a workflow opens or changes
   useEffect(() => {
-    if (initialWorkflow) {
-      setCurrentWorkflow(initialWorkflow);
-    }
-  }, [initialWorkflow]);
+    stopPolling();
+    setSelectedExecution(null);
+    setExecutions([]);
+    setTaskActionError('');
+    setActiveTab('tasks');
 
-  // Clean up polling whenever modal closes or component unmounts
-  useEffect(() => {
-    if (!isOpen) {
-      stopPolling();
+    if (isOpen && initialWorkflow) {
+      setCurrentWorkflow(initialWorkflow);
+      if (initialWorkflow._id) {
+        getWorkflowById(initialWorkflow._id)
+          .then((res) => {
+            if (res.success && res.data) {
+              setCurrentWorkflow(res.data);
+            }
+          })
+          .catch(() => {});
+      }
     }
-    return () => {
-      stopPolling();
-    };
-  }, [isOpen, stopPolling]);
+  }, [isOpen, initialWorkflow?._id, stopPolling]);
 
   // Clean up polling if tab switches away from 'executions'
   useEffect(() => {
