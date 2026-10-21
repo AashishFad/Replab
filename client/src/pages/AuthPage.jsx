@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext.jsx';
 
 /**
  * Authentication view providing Sign In and Account Registration forms.
- * Follows ReplicaLab's dark theme design system with client validation,
+ * Follows Replab's dark theme design system with client validation,
  * credential safety, and accessible error handling.
  */
 export const AuthPage = () => {
@@ -108,22 +108,28 @@ export const AuthPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 py-12 selection:bg-indigo-500 selection:text-white">
-      {/* Background glow effects */}
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 py-12 selection:bg-sky-500 selection:text-white">
+      {/* Background glow effects matching Replab brand palette */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl" />
+        <div className="absolute top-1/3 left-1/3 -translate-x-1/2 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl" />
       </div>
 
       <div className="max-w-md w-full space-y-6">
         {/* Brand header */}
-        <div className="text-center space-y-2">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-indigo-600 font-bold text-white text-xl shadow-lg shadow-indigo-600/30">
-            RL
+        <div className="text-center space-y-3">
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl overflow-hidden bg-slate-950 border border-slate-800 shadow-2xl shadow-sky-500/15 p-1 group">
+            <img
+              src="/logo.png"
+              alt="Replab Logo"
+              className="w-full h-full object-cover rounded-xl"
+            />
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
-            ReplicaLab
+          <h1 className="text-3xl sm:text-4xl font-black tracking-tight flex items-center justify-center">
+            <span className="text-white">Rep</span>
+            <span className="text-sky-400">lab</span>
           </h1>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-400 max-w-xs mx-auto">
             Secure, dependency-aware workflow orchestration platform
           </p>
         </div>
@@ -138,7 +144,7 @@ export const AuthPage = () => {
               disabled={isSubmitting}
               className={`py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
                 mode === 'login'
-                  ? 'bg-indigo-600 text-white shadow-sm'
+                  ? 'bg-sky-500 text-white shadow-sm'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -150,7 +156,7 @@ export const AuthPage = () => {
               disabled={isSubmitting}
               className={`py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
                 mode === 'register'
-                  ? 'bg-indigo-600 text-white shadow-sm'
+                  ? 'bg-sky-500 text-white shadow-sm'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -256,7 +262,7 @@ export const AuthPage = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full mt-2 py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 disabled:opacity-50 text-white text-xs font-semibold rounded-xl shadow-lg shadow-indigo-600/25 transition-all flex items-center justify-center space-x-2 cursor-pointer"
+              className="w-full mt-2 py-2.5 px-4 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 active:from-sky-600 active:to-blue-700 disabled:opacity-50 text-white text-xs font-semibold rounded-xl shadow-lg shadow-sky-500/25 transition-all flex items-center justify-center space-x-2 cursor-pointer"
             >
               {isSubmitting ? (
                 <>

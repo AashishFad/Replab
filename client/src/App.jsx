@@ -1,18 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext.jsx';
 import MainLayout from './layouts/MainLayout.jsx';
 import WorkflowsPage from './pages/WorkflowsPage.jsx';
-import Dashboard from './pages/Dashboard.jsx';
 import AuthPage from './pages/AuthPage.jsx';
 
 /**
  * Application content switched based on authentication lifecycle state.
  * Renders an initial loading spinner during session restoration,
- * login/register view when unauthenticated, and dashboard when authenticated.
+ * login/register view when unauthenticated, and workflows view when authenticated.
  */
 function AppContent() {
   const { isAuthenticated, isLoading, user } = useAuth();
-  const [activeTab, setActiveTab] = useState('workflows');
 
   // Prevent flash of login screen while checking persistent session cookie
   if (isLoading) {
@@ -31,12 +29,8 @@ function AppContent() {
   }
 
   return (
-    <MainLayout currentTab={activeTab} onSelectTab={setActiveTab}>
-      {activeTab === 'workflows' ? (
-        <WorkflowsPage key={user?.id || 'workflows'} />
-      ) : (
-        <Dashboard />
-      )}
+    <MainLayout>
+      <WorkflowsPage key={user?.id || 'workflows'} />
     </MainLayout>
   );
 }

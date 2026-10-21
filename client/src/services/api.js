@@ -9,10 +9,21 @@
 import { getToken, clearToken, notifyUnauthorized } from './authToken.js';
 import { coordinateRefresh } from './refreshCoordinator.js';
 
-export const getBaseUrl = () =>
-  (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_BASE_URL) ||
-  (typeof process !== 'undefined' && process.env && process.env.VITE_API_BASE_URL) ||
-  'http://localhost:5000/api';
+export const getBaseUrl = () => {
+  if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_BASE_URL) {
+    return import.meta.env.VITE_API_BASE_URL;
+  }
+  if (typeof process !== 'undefined' && process.env && process.env.VITE_API_BASE_URL) {
+    return process.env.VITE_API_BASE_URL;
+  }
+  if (typeof window !== 'undefined' && window.location) {
+    // If not running on local Vite dev server port 5173, use relative /api
+    if (window.location.port !== '5173') {
+      return '/api';
+    }
+  }
+  return 'http://localhost:5000/api';
+};
 
 /**
  * Helper to process fetch responses and extract JSON or throw structured errors.

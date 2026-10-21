@@ -1,6 +1,12 @@
-# ReplicaLab
+# Replab
 
-**ReplicaLab** is a developer-focused workflow orchestration and Directed Acyclic Graph (DAG) execution platform built with Node.js, Express, React, and MongoDB Atlas. It features an asynchronous background worker, atomic task claiming, exponential backoff retries, stale-worker fencing, and owner-scoped authentication with rotating refresh sessions — designed and built from scratch without Redis, BullMQ, or Celery.
+<p align="center">
+  <img src="client/public/logo.png" alt="Replab Logo" width="160" />
+</p>
+
+<p align="center">
+  <strong>Replab</strong> is a developer-focused workflow orchestration and Directed Acyclic Graph (DAG) execution platform built with Node.js, Express, React, and MongoDB Atlas. It features an asynchronous background worker, atomic task claiming, exponential backoff retries, stale-worker fencing, and owner-scoped authentication with rotating refresh sessions — designed and built from scratch without Redis, BullMQ, or Celery.
+</p>
 
 ---
 
@@ -59,7 +65,7 @@ Modern distributed workflow orchestration systems (such as Temporal, Celery, or 
 
 ## 🏗️ System Architecture
 
-ReplicaLab is architected into four decoupled tiers:
+Replab is architected into four decoupled tiers:
 
 1. **Frontend Client**: React 19 single-page application built with Vite and Tailwind CSS. Manages in-memory JWT tokens, silent cookie refresh, cross-tab session synchronization (`BroadcastChannel`), and live execution monitoring.
 2. **Backend API Server**: Node.js and Express REST API. Handles authentication, workflow CRUD, DAG validation, execution scheduling, and rate limiting.
@@ -157,7 +163,7 @@ As tasks finish, `server/src/services/coordinator.service.js` coordinates state 
 
 ## 🛡️ Worker Reliability & Distributed Primitives
 
-ReplicaLab implements distributed worker patterns directly in Node.js and MongoDB without external queue dependencies:
+Replab implements distributed worker patterns directly in Node.js and MongoDB without external queue dependencies:
 
 ### 1. Atomic Task Claiming
 Workers run an asynchronous polling loop governed by configurable concurrency (`WORKER_CONCURRENCY`). To claim a task, the worker performs a conditional atomic write:
@@ -244,7 +250,7 @@ The worker enforces a strict per-task timeout (`WORKER_TASK_TIMEOUT_MS`). Each e
 
 ## 🔐 Authentication & Session Security
 
-ReplicaLab provides a complete, hardened authentication and authorization system:
+Replab provides a complete, hardened authentication and authorization system:
 
 ```
 [ Client Browser ]
@@ -361,7 +367,7 @@ All protected routes require an `Authorization: Bearer <token>` header unless au
 ## 📁 Repository Layout
 
 ```
-ReplicaLab/
+Replab/
 ├── client/                             # Frontend React + Vite SPA
 │   ├── public/                         # Static assets (favicons, SVGs)
 │   ├── src/
@@ -433,8 +439,8 @@ ReplicaLab/
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/your-username/ReplicaLab.git
-cd ReplicaLab
+git clone https://github.com/your-username/Replab.git
+cd Replab
 ```
 
 ### 2. Install Dependencies
@@ -508,7 +514,7 @@ npm run dev:client
 
 ## 🧪 Testing & Test Database Safety
 
-ReplicaLab includes a comprehensive test suite divided into focused, isolated test files that test domain modules independently.
+Replab includes a comprehensive test suite divided into focused, isolated test files that test domain modules independently.
 
 ### Isolated Test Suites
 Each modern test suite targets an isolated test database (e.g., `replicalab_test_auth`, `replicalab_test_worker_timeout`) to prevent any crossover with development or production data:
@@ -662,7 +668,7 @@ Follow these steps to explore and test the platform's core capabilities:
 
 ## 🔮 Future Roadmap
 
-Potential enhancements for future iterations of ReplicaLab:
+Potential enhancements for future iterations of Replab:
 
 - [ ] **WebSocket / SSE Live Streaming**: Replace sequential polling with Server-Sent Events or WebSockets for instant, event-driven task state updates.
 - [ ] **Dynamic Workflow Templating**: Support runtime task input interpolation (passing outputs from upstream tasks directly into downstream configs).
