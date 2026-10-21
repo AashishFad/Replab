@@ -41,30 +41,50 @@ const devAllowedOrigins = new Set([
   'http://127.0.0.1:5173',
 ]);
 
+// Serve static frontend assets if built (before CORS so static assets load directly)
+if (fs.existsSync(clientDistPath)) {
+  app.use(express.static(clientDistPath));
+}
+
 // Enable CORS with restricted origin allowlist
 app.use(
-  cors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin (curl, Postman, server-to-server)
-      if (!origin) {
-        return callback(null, true);
-      }
+  cors((req, callback) => {
+    const origin = req.header('Origin');
 
-      const isDev = (process.env.NODE_ENV || 'development') === 'development';
-      const renderUrl = process.env.RENDER_EXTERNAL_URL;
-      const isAllowed = isDev
-        ? devAllowedOrigins.has(origin)
-        : origin === clientOrigin || (renderUrl && origin === renderUrl);
+    // Allow requests with no origin (curl, Postman, server-to-server)
+    if (!origin) {
+      return callback(null, { origin: true, credentials: true });
+    }
 
-      if (isAllowed) {
-        callback(null, true);
-      } else {
-        const corsError = new Error(`CORS blocked request from origin: ${origin}`);
-        corsError.statusCode = 403;
-        callback(corsError);
+    const isDev = (process.env.NODE_ENV || 'development') === 'development';
+    const renderUrl = process.env.RENDER_EXTERNAL_URL;
+
+    // Determine if request origin matches the server's own host (same-origin request)
+    let isSameHost = false;
+    try {
+      const originHost = new URL(origin).host;
+      const reqHost = req.get('host');
+      if (originHost && reqHost && originHost === reqHost) {
+        isSameHost = true;
       }
-    },
-    credentials: true,
+    } catch {
+      // ignore URL parsing error
+    }
+
+    const isAllowed =
+      isSameHost ||
+      origin === clientOrigin ||
+      (renderUrl && origin === renderUrl) ||
+      (isDev && devAllowedOrigins.has(origin)) ||
+      origin.endsWith('.onrender.com');
+
+    if (isAllowed) {
+      callback(null, { origin: true, credentials: true });
+    } else {
+      const corsError = new Error(`CORS blocked request from origin: ${origin}`);
+      corsError.statusCode = 403;
+      callback(corsError);
+    }
   })
 );
 
@@ -76,11 +96,8 @@ app.use(cookieParser());
 // Mount modular API routes under /api with general rate limiting
 app.use('/api', generalApiLimiter, apiRouter);
 
-// Serve frontend client in production if built
+// Catch-all SPA route to serve index.html for non-API client routes
 if (fs.existsSync(clientDistPath)) {
-  app.use(express.static(clientDistPath));
-
-  // Catch-all SPA route to serve index.html for non-API client routes
   app.get('*', (req, res, next) => {
     if (req.path.startsWith('/api')) {
       return next();
